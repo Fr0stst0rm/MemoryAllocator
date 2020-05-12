@@ -112,7 +112,7 @@ void MemoryAllocator::Free(void* memoryP) {
 
 		for (int i = 0; i < poolList_m.size(); i++)
 		{
-			std::cout << "To delete: Pool " << i << " Free: " << indexCount[i] << "\n";
+			std::cout << "Pool " << i << " Free: " << indexCount[i] << "\n";
 		}
 	}
 }
