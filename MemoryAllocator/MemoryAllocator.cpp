@@ -10,12 +10,15 @@ MemoryAllocator::~MemoryAllocator() {
 	delete head;
 }
 
-void* MemoryAllocator::Alloc(uint8_t byte, uint8_t alignment) {
+void* MemoryAllocator::Alloc(uint8_t byteSize, uint8_t alignment) {
+
+	if (byteSize > CHUNK_SIZE) {
+		std::cout << "Error! Byte size to big\n";
+		return nullptr;
+	}
 
 	void* freeBlock = head->memVoidP;
 	head = head->next;
-
-
 
 	if (head->next == nullptr) {
 		head->next = new GPMemBlock();

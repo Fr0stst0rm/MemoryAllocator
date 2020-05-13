@@ -12,7 +12,7 @@ void main() {
 	
 
 	for (int i = 0; i < SIZE; i++) {
-		test[i] = reinterpret_cast<uint8_t*>(memAlloc.Alloc(sizeof(uint8_t), 2));
+		test[i] = reinterpret_cast<uint8_t*>(memAlloc.Alloc(sizeof(uint8_t),1));
 		*test[i] = i + 1;
 	}
 
