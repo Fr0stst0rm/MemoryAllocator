@@ -9,12 +9,16 @@
 #include <iostream>
 #include <vector>
 
-constexpr uint16_t POOL_SIZE = 128/8; //1024
-constexpr uint16_t CHUNK_SIZE = 32/8;
+constexpr uint16_t POOL_SIZE = 32/8; //1024
+constexpr uint16_t CHUNK_SIZE = 8/8;
 
 struct GPMemBlock {
 	~GPMemBlock();
-	void* memory = nullptr;
+	union {
+		void* memVoidP = nullptr;
+		uint8_t* memByteP;
+	};
+
 	GPMemBlock* next = nullptr;
 };
 
@@ -25,7 +29,7 @@ public:
 	MemoryAllocator();
 	~MemoryAllocator();
 
-	void* Alloc();
+	void* Alloc(uint8_t byte, uint8_t alignment); //TODO Alignment
 	void Free(void* memoryP);
 
 	uint32_t GetFreeMemBlockCount() const;

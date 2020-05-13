@@ -8,16 +8,16 @@ void main() {
 
 	std::cout << memAlloc.GetFreeMemBlockCount() << "\n";
 	
-	uint32_t** test = new uint32_t*[SIZE];
+	uint8_t** test = new uint8_t*[SIZE];
 	
 
 	for (int i = 0; i < SIZE; i++) {
-		test[i] = reinterpret_cast<uint32_t*>(memAlloc.Alloc());
+		test[i] = reinterpret_cast<uint8_t*>(memAlloc.Alloc(sizeof(uint8_t), 2));
 		*test[i] = i + 1;
 	}
 
 	for (int i = SIZE-1; i >= 10; i--) {
-		memAlloc.Free(reinterpret_cast<uint32_t*>(test[i]));
+		memAlloc.Free(reinterpret_cast<uint8_t*>(test[i]));
 	}
 
 	std::cout << memAlloc.GetFreeMemBlockCount() << "\n";
