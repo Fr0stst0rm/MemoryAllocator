@@ -29,19 +29,22 @@ public:
 	MemoryAllocator();
 	~MemoryAllocator();
 
-	void* Alloc(uint8_t byte, uint8_t alignment); //TODO Alignment
+	void* Alloc(uint8_t byte); //TODO Alignment
 	void Free(void* memoryP);
 
 	uint32_t GetFreeMemBlockCount() const;
 	
-	GPMemBlock* head; // TODO Private
+	// TODO Private after testing
+	GPMemBlock* head;
+	std::vector<void*> poolList_m;
+
 private:
 
 	void DeAllocAllPools();
 	void AllocPool(GPMemBlock * blockPointer);
 
 
-	std::vector<void*> poolList_m;
+	
 };
 
 #endif // !MEMORY_ALLOC_H_

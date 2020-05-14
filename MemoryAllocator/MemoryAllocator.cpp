@@ -11,7 +11,7 @@ MemoryAllocator::~MemoryAllocator() {
 	delete head;
 }
 
-void* MemoryAllocator::Alloc(uint8_t byteSize, uint8_t alignment) {
+void* MemoryAllocator::Alloc(uint8_t byteSize) {
 
 	if (byteSize > CHUNK_SIZE) {
 		std::cout << "Error! Byte size to big\n";
@@ -174,6 +174,7 @@ void MemoryAllocator::Free(void* memoryP) {
 					*/
 
 					(*(memCount[i].end() - 1))->next = nullptr;
+					free((*memCount[i].begin())->memVoidP);
 					delete* memCount[i].begin();
 
 					poolList_m.erase(poolList_m.begin() + i);
