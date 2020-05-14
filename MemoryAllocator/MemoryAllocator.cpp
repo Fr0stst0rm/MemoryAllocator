@@ -1,3 +1,4 @@
+#include "assert.h"
 #include "MemoryAllocator.h"
 
 MemoryAllocator::MemoryAllocator() {
@@ -17,7 +18,10 @@ void* MemoryAllocator::Alloc(uint8_t byteSize, uint8_t alignment) {
 		return nullptr;
 	}
 
+	assert(head != nullptr);
 	void* freeBlock = head->memVoidP;
+	
+	assert(head->next != nullptr);
 	head = head->next;
 
 	if (head->next == nullptr) {
@@ -56,6 +60,8 @@ void MemoryAllocator::AllocPool(GPMemBlock* blockPointer) {
 
 uint32_t MemoryAllocator::GetFreeMemBlockCount() const {
 	uint32_t count = 0;
+
+	assert(head != nullptr);
 
 	GPMemBlock* current = head;
 
