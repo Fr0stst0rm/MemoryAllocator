@@ -70,8 +70,6 @@ uint32_t MemoryAllocator::GetFreeMemBlockCount() const {
 
 void MemoryAllocator::Free(void* memoryP) {
 
-	// TODO Check if mem is part of our pools
-
 	bool partOfPool = false;
 	for (int i = 0; (!partOfPool) && (i < poolList_m.size()); i++) {
 		if ((memoryP >= (poolList_m.at(i))) && (memoryP <= (reinterpret_cast<uint8_t*>(poolList_m.at(i)) + (POOL_SIZE - 1)))) {
