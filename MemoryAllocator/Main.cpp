@@ -1,5 +1,6 @@
 #include "MemoryAllocator.h"
 #include <iostream>
+#include <cassert>
 
 constexpr uint8_t SIZE = 15;
 
@@ -21,18 +22,8 @@ void main() {
 	} 
 
 	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[0] = 10;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[1] = 11;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[2] = 10;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[3] = 11;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[4] = 10;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[5] = 11;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[6] = 10;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[7] = 11;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[8] = 10;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[9] = 11;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[10] = 10;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[11] = 11;
-	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[12] = 10;
+	reinterpret_cast<uint8_t*>(memAlloc.poolList_m.at(3))[100] = 11;
+
 
 	for (int i = SIZE-1; i >= 10; i--) {
 		memAlloc.Free(reinterpret_cast<uint8_t*>(test[i]));
@@ -43,4 +34,15 @@ void main() {
 	}
 
 	std::cout << memAlloc.GetFreeMemBlockCount() << "\n";
+
+	//Raffi test
+	MemoryAllocator testPool;
+
+	uint8_t* v1 = reinterpret_cast<uint8_t*>(testPool.Alloc(sizeof(uint8_t)));
+	*v1 = 1;
+
+	uint8_t* v2 = reinterpret_cast<uint8_t*>(testPool.Alloc(sizeof(uint8_t)));
+	*v2 = 2;
+
+	assert(v2 == v1 + sizeof(uint8_t));
 }

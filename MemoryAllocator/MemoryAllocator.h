@@ -15,7 +15,7 @@ constexpr uint16_t CHUNK_SIZE = 8/8;
 struct GPMemBlock {
 	~GPMemBlock();
 	union {
-		void* memVoidP = nullptr;
+		void* memVoidP = nullptr; //todo mem leaks?
 		uint8_t* memByteP;
 	};
 
