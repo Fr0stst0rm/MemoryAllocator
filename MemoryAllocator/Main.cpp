@@ -35,7 +35,7 @@ void main() {
 
 	std::cout << memAlloc.GetFreeMemBlockCount() << "\n";
 
-	//Raffi test
+	//Byte Order test
 	MemoryAllocator testPool;
 
 	uint8_t* v1 = reinterpret_cast<uint8_t*>(testPool.Alloc(sizeof(uint8_t)));
@@ -45,4 +45,11 @@ void main() {
 	*v2 = 2;
 
 	assert(v2 == v1 + sizeof(uint8_t));
+
+	/*
+	//Byte size test
+	MemoryAllocator testPool2;
+
+	uint8_t* v3 = reinterpret_cast<uint8_t*>(testPool2.Alloc(CHUNK_SIZE+1));
+	*/
 }
