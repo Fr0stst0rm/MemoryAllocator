@@ -15,7 +15,7 @@ constexpr uint16_t CHUNK_SIZE = 8/8;
 struct GPMemBlock {
 	~GPMemBlock();
 	union {
-		void* memVoidP = nullptr;
+		void* memVoidP = nullptr; //todo mem leaks?
 		uint8_t* memByteP;
 	};
 
@@ -29,7 +29,7 @@ public:
 	MemoryAllocator();
 	~MemoryAllocator();
 
-	void* Alloc(uint8_t byte, uint8_t alignment); //TODO Alignment
+	void* Alloc(uint8_t byteSize, uint8_t alignment); //TODO Alignment
 	void Free(void* memoryP);
 
 	uint32_t GetFreeMemBlockCount() const;

@@ -1,4 +1,4 @@
-#include "assert.h"
+#include <cassert>
 #include "MemoryAllocator.h"
 
 MemoryAllocator::MemoryAllocator() {
@@ -13,15 +13,11 @@ MemoryAllocator::~MemoryAllocator() {
 
 void* MemoryAllocator::Alloc(uint8_t byteSize, uint8_t alignment) {
 
-	if (byteSize > CHUNK_SIZE) {
-		std::cout << "Error! Byte size to big\n";
-		return nullptr;
-	}
-
+	assert(byteSize <= CHUNK_SIZE);
 	assert(head != nullptr);
-	void* freeBlock = head->memVoidP;
-	
 	assert(head->next != nullptr);
+
+	void* freeBlock = head->memVoidP;
 	head = head->next;
 
 	if (head->next == nullptr) {
@@ -33,16 +29,10 @@ void* MemoryAllocator::Alloc(uint8_t byteSize, uint8_t alignment) {
 }
 
 void MemoryAllocator::AllocPool(GPMemBlock* blockPointer) {
-	uint8_t* pool;
+	
+	uint8_t* pool = static_cast<uint8_t*>(malloc(POOL_SIZE));
 
-	pool = (uint8_t*)malloc(POOL_SIZE);
-
-	if (pool == nullptr) {
-		std::cout << "Allocation error";
-		exit(1);
-	}
-
-
+	assert(pool != nullptr);
 
 	GPMemBlock* currentBlock = blockPointer;
 	currentBlock->memVoidP = pool;
@@ -59,6 +49,7 @@ void MemoryAllocator::AllocPool(GPMemBlock* blockPointer) {
 }
 
 uint32_t MemoryAllocator::GetFreeMemBlockCount() const {
+
 	uint32_t count = 0;
 
 	assert(head != nullptr);
@@ -79,7 +70,7 @@ void MemoryAllocator::Free(void* memoryP) {
 	// TODO Check if mem is part of our pools
 
 	bool partOfPool = false;
-	for (int i = 0; (!partOfPool) && (i < poolList_m.size()); i++) {
+	for (unsigned int i = 0; (!partOfPool) && (i < poolList_m.size()); ++i) {
 		if ((memoryP >= (poolList_m.at(i))) && (memoryP <= (reinterpret_cast<uint8_t*>(poolList_m.at(i)) + (POOL_SIZE - 1)))) {
 			partOfPool = true;
 		}
@@ -89,15 +80,19 @@ void MemoryAllocator::Free(void* memoryP) {
 		GPMemBlock* insertAfter = nullptr;
 		GPMemBlock* insertBefore = head;
 
+		assert(insertBefore != nullptr);
+
 		while ((insertBefore != nullptr) && (memoryP > insertBefore->memVoidP)) {
 			insertAfter = insertBefore;
 			insertBefore = insertBefore->next;
+			
+			assert(insertBefore != nullptr);
 		}
 
 		GPMemBlock* newBlock = new GPMemBlock();
 		newBlock->memVoidP = memoryP;
 
-		if (insertAfter != nullptr) {
+		if (insertAfter != nullptr) { //todo auch assert?
 			insertAfter->next = newBlock;
 		}
 
@@ -115,7 +110,7 @@ void MemoryAllocator::Free(void* memoryP) {
 			std::vector<GPMemBlock*>* memCount = new std::vector<GPMemBlock*>[poolList_m.size()];
 
 			GPMemBlock* last;
-			for (int i = poolList_m.size() - 1; i >= 0; i--) {
+			for (int i = poolList_m.size() - 1; i >= 0; --i) { //todo problem with unsigned int because of obvious reasons
 				memCount[i] = std::vector <GPMemBlock*>();
 
 				last = head;
@@ -136,7 +131,7 @@ void MemoryAllocator::Free(void* memoryP) {
 
 			GPMemBlock* removeFrom = nullptr;
 			GPMemBlock* removeTo = nullptr;
-			for (int i = 0; i < poolList_m.size(); i++)
+			for (unsigned int i = 0; i < poolList_m.size(); ++i)
 			{
 				//std::cout << "Pool " << i << " Free: " << memCount[i].size() << "\n";
 
@@ -144,12 +139,19 @@ void MemoryAllocator::Free(void* memoryP) {
 					std::cout << "Deleting pool " << i << "\n";
 
 					GPMemBlock* current = head;
+					assert(current != nullptr);
+					
 					//std::cout << "Head " << head->memVoidP << "\n";
 					while (current->next != nullptr) {
 						//std::cout << "Current " << current->memVoidP << "\n";
+						assert(*memCount[i].begin() != nullptr);
+
 						if ((*memCount[i].begin())->memVoidP == current->next->memVoidP) {
 							removeFrom = current;
 						}
+
+						assert(*(memCount[i].end() - 1) != nullptr);
+
 						if ((*(memCount[i].end() - 1))->memVoidP == current->memVoidP) {
 							removeTo = current->next;
 						}
@@ -174,7 +176,8 @@ void MemoryAllocator::Free(void* memoryP) {
 					std::cout << "Delete from Start " << (*memCount[i].begin())->memVoidP << "\n";
 					std::cout << "Delete to End " << (*(memCount[i].end() - 1))->memVoidP << "\n";
 					*/
-
+					assert(*(memCount[i].end() - 1) != nullptr);
+					
 					(*(memCount[i].end() - 1))->next = nullptr;
 					delete* memCount[i].begin();
 
@@ -188,7 +191,7 @@ void MemoryAllocator::Free(void* memoryP) {
 
 void MemoryAllocator::DeAllocAllPools() {
 
-	for (int i = poolList_m.size() - 1; i >= 0; i--) {
+	for (int i = poolList_m.size() - 1; i >= 0; --i) {
 		free(poolList_m.at(i));
 		poolList_m.pop_back();
 	}
