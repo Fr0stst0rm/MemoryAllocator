@@ -103,8 +103,8 @@ void MemoryAllocator::Free(void* memoryP) {
 
 
 		// Check if pool can be deleted
-		std::cout << GetFreeMemBlockCount() << " >= " << (2 * (POOL_SIZE / CHUNK_SIZE)) << "\n";
 		if (GetFreeMemBlockCount() >= (2 * (POOL_SIZE / CHUNK_SIZE))) {
+			std::cout << "Much free space " << GetFreeMemBlockCount() << " >= " << (2 * (POOL_SIZE / CHUNK_SIZE)) << "\n";
 
 			std::vector<GPMemBlock*>* memCount = new std::vector<GPMemBlock*>[poolList_m.size()];
 
@@ -132,13 +132,13 @@ void MemoryAllocator::Free(void* memoryP) {
 			GPMemBlock* removeTo = nullptr;
 			for (int i = 0; i < poolList_m.size(); i++)
 			{
-				std::cout << "Pool " << i << " Free: " << memCount[i].size() << "\n";
+				//std::cout << "Pool " << i << " Free: " << memCount[i].size() << "\n";
 
 				if (memCount[i].size() == (POOL_SIZE / CHUNK_SIZE)) {
 					std::cout << "Deleting pool " << i << "\n";
 
 					GPMemBlock* current = head;
-					std::cout << "Head " << head->memVoidP << "\n";
+					//std::cout << "Head " << head->memVoidP << "\n";
 					while (current->next != nullptr) {
 						//std::cout << "Current " << current->memVoidP << "\n";
 						if ((*memCount[i].begin())->memVoidP == current->next->memVoidP) {
@@ -171,8 +171,6 @@ void MemoryAllocator::Free(void* memoryP) {
 
 					(*(memCount[i].end() - 1))->next = nullptr;
 					delete* memCount[i].begin();
-
-					head;
 
 					poolList_m.erase(poolList_m.begin() + i);
 					break;
